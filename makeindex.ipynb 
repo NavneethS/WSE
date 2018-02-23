@@ -1,0 +1,177 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# Read input - mergedchunks/*\n",
+    "# Output - final/invindex and final/lexicon\n",
+    "# Invindex format - list of bytes (compressed doc ids)\n",
+    "# Lexicon file format - {word : startoffset in invindex file, endoffset}\n",
+    "# Pagetable already created"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "import glob\n",
+    "import zlib\n",
+    "import struct"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "IIF = open('./indexfiles/invindex', 'ab')\n",
+    "#COUNTER = 0"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [],
+   "source": [
+    "# Append docs to binary file\n",
+    "def writeindex(docs):\n",
+    "    #global COUNTER\n",
+    "    for d in docs:\n",
+    "        b = struct.pack('i',int(d))\n",
+    "        IIF.write(b) #compress?\n",
+    "        #COUNTER += 1\n",
+    "        #if COUNTER > 5000:\n",
+    "        #    IIF.flush()            "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {
+    "collapsed": false,
+    "scrolled": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Looking at ./indexfiles/mergedchunks/xaa\n",
+      "Writing lexicon\n"
+     ]
+    }
+   ],
+   "source": [
+    "lexicon = {}\n",
+    "currentoffset = 0\n",
+    "currentword = None\n",
+    "\n",
+    "for filename in glob.glob(\"./indexfiles/mergedchunks/*\"):\n",
+    "    f = open(filename,'r')\n",
+    "    print('Looking at', filename)\n",
+    "    for line in f:\n",
+    "        record = line.split('\\t')\n",
+    "        word = record[0].strip()\n",
+    "        docs = record[1].split()\n",
+    "        writeindex(docs)\n",
+    "\n",
+    "        if word != currentword:\n",
+    "            startoffset = currentoffset\n",
+    "            endoffset = startoffset + len(docs) - 1\n",
+    "        else:\n",
+    "            startoffset = lexicon[word][0]\n",
+    "            endoffset = lexicon[word][1] + len(docs)\n",
+    "            \n",
+    "        lexicon[word] = (startoffset, endoffset)\n",
+    "        currentoffset = endoffset + 1\n",
+    "        currentword = word\n",
+    "\n",
+    "    f.close()\n",
+    "\n",
+    "IIF.close()\n",
+    "\n",
+    "print('Writing lexicon')\n",
+    "with open('./indexfiles/lexicon','w') as f:\n",
+    "    for i in lexicon:\n",
+    "        f.write(i)\n",
+    "        f.write('\\t')\n",
+    "        f.write(str(lexicon[i][0]))\n",
+    "        f.write(' ')\n",
+    "        f.write(str(lexicon[i][1]))\n",
+    "        f.write('\\n')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.0"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

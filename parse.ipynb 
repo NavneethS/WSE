@@ -1,0 +1,292 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "def getscores(s1,s2,s3,c1,c2,c3):\n",
+    "    scores = {}\n",
+    "    for word in c1:\n",
+    "        if word not in scores:\n",
+    "            scores[word] = 3*float(s1)\n",
+    "        else:\n",
+    "            scores[word] += 3*float(s1)\n",
+    "            \n",
+    "    for word in c2:\n",
+    "        if word not in scores:\n",
+    "            scores[word] = 2*float(s2)\n",
+    "        else:\n",
+    "            scores[word] += 2*float(s2)\n",
+    "            \n",
+    "    for word in c3:\n",
+    "        if word not in scores:\n",
+    "            scores[word] = 1*float(s3)\n",
+    "        else:\n",
+    "            scores[word] += 1*float(s3)\n",
+    "            \n",
+    "    return scores"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 61,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [],
+   "source": [
+    "# Add docs from file to global PAGETABLE and words to local INVINDEX\n",
+    "def parsefile(filename):\n",
+    "    fil = open(filename, 'r')\n",
+    "    f = fil.read().splitlines()    \n",
+    "    invindex = {}\n",
+    "    pagetablekey = 1 + len(PAGETABLE)\n",
+    "    \n",
+    "    for i in list(range(0,200,5)):\n",
+    "        image = f[i]    \n",
+    "        words1 = f[i+1].split()[1:]\n",
+    "        words2 = f[i+2].split()[1:]\n",
+    "        words3 = f[i+3].split()[1:]\n",
+    "        #scores = getscores(score1,score2,score3, caption1,caption2,caption3)'''\n",
+    "        words = words1 + words2 + words3\n",
+    "        PAGETABLE[pagetablekey]= (image, len(words))\n",
+    "      \n",
+    "        for w in set(words):\n",
+    "            if w not in invindex:\n",
+    "                invindex[w] =  [pagetablekey]\n",
+    "            else:\n",
+    "                invindex[w].append(pagetablekey)\n",
+    "        pagetablekey += 1\n",
+    "\n",
+    "    fil.close()\n",
+    "    return invindex"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 51,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "def diskWritePT():\n",
+    "    print('Writing PT to ~pagetable~')\n",
+    "    with open(\"indexfiles/pagetable\", \"w\") as f:\n",
+    "        for i in PAGETABLE:\n",
+    "            f.write(str(i))\n",
+    "            f.write('\\t')\n",
+    "            f.write(PAGETABLE[i][0])\n",
+    "            f.write(' ')\n",
+    "            f.write(str(PAGETABLE[i][1]))\n",
+    "            f.write('\\n')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 52,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "def diskWriteII(invindex, num):\n",
+    "    print('Writing II to ~myfile' + str(num) + '~')\n",
+    "    with open('indexfiles/unsortedchunks/myfile'+str(num), 'w') as f:\n",
+    "        for w in invindex:\n",
+    "            f.write(w) #.decode('utf8'))\n",
+    "            f.write('\\t')\n",
+    "            for d in invindex[w]:\n",
+    "                f.write(str(d)+' ')\n",
+    "            f.write('\\n')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 62,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Writing II to ~myfile1~\n",
+      "Writing II to ~myfile2~\n",
+      "Writing II to ~myfile3~\n",
+      "Writing II to ~myfile4~\n",
+      "Writing II to ~myfile5~\n",
+      "Writing II to ~myfile6~\n",
+      "Writing II to ~myfile7~\n",
+      "Writing II to ~myfile8~\n",
+      "Writing II to ~myfile9~\n",
+      "Writing II to ~myfile10~\n",
+      "Writing II to ~myfile11~\n",
+      "Writing II to ~myfile12~\n",
+      "Writing II to ~myfile13~\n",
+      "Writing II to ~myfile14~\n",
+      "Writing II to ~myfile15~\n",
+      "Writing II to ~myfile16~\n",
+      "Writing II to ~myfile17~\n",
+      "Writing II to ~myfile18~\n",
+      "Writing II to ~myfile19~\n",
+      "Writing II to ~myfile20~\n",
+      "Writing II to ~myfile21~\n",
+      "Writing II to ~myfile22~\n",
+      "Writing II to ~myfile23~\n",
+      "Writing II to ~myfile24~\n",
+      "Writing II to ~myfile25~\n",
+      "Writing II to ~myfile26~\n",
+      "Writing II to ~myfile27~\n",
+      "Writing II to ~myfile28~\n",
+      "Writing II to ~myfile29~\n",
+      "Writing II to ~myfile30~\n",
+      "Writing II to ~myfile31~\n",
+      "Writing II to ~myfile32~\n",
+      "Writing II to ~myfile33~\n",
+      "Writing II to ~myfile34~\n",
+      "Writing II to ~myfile35~\n",
+      "Writing II to ~myfile36~\n",
+      "Writing II to ~myfile37~\n",
+      "Writing II to ~myfile38~\n",
+      "Writing II to ~myfile39~\n",
+      "Writing II to ~myfile40~\n",
+      "Writing II to ~myfile41~\n",
+      "Writing II to ~myfile42~\n",
+      "Writing II to ~myfile43~\n",
+      "Writing II to ~myfile44~\n",
+      "Writing II to ~myfile45~\n",
+      "Writing II to ~myfile46~\n",
+      "Writing II to ~myfile47~\n",
+      "Writing II to ~myfile48~\n",
+      "Writing II to ~myfile49~\n",
+      "Writing II to ~myfile50~\n",
+      "Writing II to ~myfile51~\n",
+      "Writing II to ~myfile52~\n",
+      "Writing II to ~myfile53~\n",
+      "Writing II to ~myfile54~\n",
+      "Writing II to ~myfile55~\n",
+      "Writing II to ~myfile56~\n",
+      "Writing II to ~myfile57~\n",
+      "Writing II to ~myfile58~\n",
+      "Writing II to ~myfile59~\n",
+      "Writing II to ~myfile60~\n",
+      "Writing II to ~myfile61~\n",
+      "Writing II to ~myfile62~\n",
+      "Writing II to ~myfile63~\n",
+      "Writing II to ~myfile64~\n",
+      "Writing II to ~myfile65~\n",
+      "Writing II to ~myfile66~\n",
+      "Writing II to ~myfile67~\n",
+      "Writing II to ~myfile68~\n",
+      "Writing II to ~myfile69~\n",
+      "Writing II to ~myfile70~\n",
+      "Writing II to ~myfile71~\n",
+      "Writing II to ~myfile72~\n",
+      "Writing II to ~myfile73~\n",
+      "Writing II to ~myfile74~\n",
+      "Writing II to ~myfile75~\n",
+      "Writing II to ~myfile76~\n",
+      "Writing II to ~myfile77~\n",
+      "Writing II to ~myfile78~\n",
+      "Writing II to ~myfile79~\n",
+      "Writing II to ~myfile80~\n",
+      "Writing II to ~myfile81~\n",
+      "Writing II to ~myfile82~\n",
+      "Writing II to ~myfile83~\n",
+      "Writing II to ~myfile84~\n",
+      "Writing II to ~myfile85~\n",
+      "Writing II to ~myfile86~\n",
+      "Writing II to ~myfile87~\n",
+      "Writing II to ~myfile88~\n",
+      "Writing II to ~myfile89~\n",
+      "Writing II to ~myfile90~\n",
+      "Writing II to ~myfile91~\n",
+      "Writing II to ~myfile92~\n",
+      "Writing II to ~myfile93~\n",
+      "Writing II to ~myfile94~\n",
+      "Writing II to ~myfile95~\n",
+      "Writing II to ~myfile96~\n",
+      "Writing II to ~myfile97~\n",
+      "Writing II to ~myfile98~\n",
+      "Writing II to ~myfile99~\n",
+      "Writing II to ~myfile100~\n",
+      "Writing II to ~myfile101~\n",
+      "Writing II to ~myfile102~\n",
+      "Writing II to ~myfile103~\n",
+      "Writing II to ~myfile104~\n",
+      "Writing II to ~myfile105~\n",
+      "Writing II to ~myfile106~\n",
+      "Writing PT to ~pagetable~\n"
+     ]
+    }
+   ],
+   "source": [
+    "PAGETABLE = {}\n",
+    "num = 0\n",
+    "\n",
+    "for i in range(1,107):\n",
+    "    filename = 'output/dir_'+str(i).zfill(3)    \n",
+    "    invindex = parsefile(filename)\n",
+    "    diskWriteII(invindex, i)\n",
+    "    del invindex\n",
+    "\n",
+    "diskWritePT()\n",
+    "del PAGETABLE"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.0"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
